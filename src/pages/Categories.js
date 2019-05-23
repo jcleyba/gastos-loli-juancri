@@ -1,17 +1,10 @@
 import React, { useContext, useRef } from 'react';
-import {
-  IonList,
-  IonItem,
-  IonItemSliding,
-  IonLabel,
-  IonItemOptions,
-  IonItemOption
-} from '@ionic/react';
+import { IonList, IonItem, IonLabel } from '@ionic/react';
 
 import { Context } from '../App';
 import CategoriesForm from '../components/CategoriesForm';
-import { deleteEntity } from '../utils';
 import Page from '../components/Page';
+import DeletableListItem from '../components/DeletableListItem';
 
 function Categories(props) {
   const { categories } = useContext(Context);
@@ -34,19 +27,15 @@ function renderObjectAsList(object, ref) {
     const entity = object[item];
 
     return (
-      <IonItemSliding key={i}>
+      <DeletableListItem
+        key={i}
+        entityName={`categories/${item}`}
+        customRef={ref}
+      >
         <IonItem>
           <IonLabel>{entity.name}</IonLabel>
         </IonItem>
-        <IonItemOptions side="end">
-          <IonItemOption
-            color="danger"
-            onClick={() => deleteEntity(`categories/${item}`, ref)}
-          >
-            Borrar
-          </IonItemOption>
-        </IonItemOptions>
-      </IonItemSliding>
+      </DeletableListItem>
     );
   });
 }

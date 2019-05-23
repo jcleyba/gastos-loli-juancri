@@ -15,8 +15,7 @@ function Totals(props) {
       const gasto = gastos[item];
 
       if (!mapped[gasto.cat]) {
-        mapped[gasto.cat] = [];
-        mapped[gasto.cat].push(gasto.amount);
+        mapped[gasto.cat] = [gasto.amount];
       } else {
         mapped[gasto.cat].push(gasto.amount);
       }

@@ -1,19 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
-import {
-  IonItem,
-  IonList,
-  IonItemSliding,
-  IonLabel,
-  IonItemOptions,
-  IonItemOption,
-  IonText
-} from '@ionic/react';
+import { IonItem, IonList, IonLabel, IonText } from '@ionic/react';
 import { format } from 'date-fns';
-
 import firebase from 'firebase/app';
 import 'firebase/database';
-import { deleteEntity } from '../utils';
+
 import Page from '../components/Page';
+import DeletableListItem from '../components/DeletableListItem';
 
 function List(props) {
   const [gastos, setGastos] = useState(null);
@@ -44,7 +36,7 @@ function renderObjectAsList(object, ref) {
     const gasto = object[item];
 
     return (
-      <IonItemSliding key={i}>
+      <DeletableListItem key={i} entityName={`gastos/${item}`} customRef={ref}>
         <IonItem>
           <IonLabel>
             {gasto.description} <br />
@@ -52,15 +44,7 @@ function renderObjectAsList(object, ref) {
           </IonLabel>
           <IonText slot="end">${gasto.amount}</IonText>
         </IonItem>
-        <IonItemOptions side="end">
-          <IonItemOption
-            color="danger"
-            onClick={() => deleteEntity(`gastos/${item}`, ref)}
-          >
-            Borrar
-          </IonItemOption>
-        </IonItemOptions>
-      </IonItemSliding>
+      </DeletableListItem>
     );
   });
 }

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   IonCard,
   IonCardContent,
@@ -25,6 +25,10 @@ function ExpenseForm(props) {
     callback(val);
   }
 
+  useEffect(() => {
+    setCategory('');
+  }, [categories]);
+
   function saveExp() {
     setSaving(true);
 
@@ -46,6 +50,7 @@ function ExpenseForm(props) {
 
     return keys.map((item, i) => {
       const cat = categories[item];
+
       return (
         <IonSelectOption key={i} value={item}>
           {cat.name}
@@ -53,7 +58,7 @@ function ExpenseForm(props) {
       );
     });
   }
-  
+
   return (
     <IonCard>
       <IonCardContent>
@@ -74,7 +79,7 @@ function ExpenseForm(props) {
           />
         </IonItem>
         <IonItem>
-          <IonLabel>Tipo de Gasto</IonLabel>
+          <IonLabel position="floating">Tipo de Gasto</IonLabel>
           <IonSelect
             value={category}
             interface="popover"

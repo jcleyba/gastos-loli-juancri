@@ -34,10 +34,16 @@ function App(props) {
       .startAt(startOfMonth(now).getTime())
       .endAt(endOfMonth(now).getTime())
       .on('value', snap => setGastos(snap.val()));
+      
     firebase
       .database()
       .ref('categories')
       .on('value', snap => setCategories(snap.val()));
+
+    firebase
+      .database()
+      .ref('categories')
+      .on('child_changed', snap => setCategories(snap.val()));
   }, []);
 
   return (
