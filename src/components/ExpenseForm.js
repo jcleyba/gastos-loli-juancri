@@ -9,9 +9,9 @@ import {
   IonSelect,
   IonSelectOption
 } from '@ionic/react';
-import firebase from 'firebase/app';
-import 'firebase/database';
+
 import { Context } from '../App';
+import { saveExpenses } from '../data/expenses';
 
 function ExpenseForm(props) {
   const { categories } = useContext(Context);
@@ -32,15 +32,12 @@ function ExpenseForm(props) {
   function saveExp() {
     setSaving(true);
 
-    firebase
-      .database()
-      .ref('gastos')
-      .push({ description, amount, ts: Date.now(), cat: category }, () => {
-        setSaving(false);
-        setDescription('');
-        setAmount('');
-        setCategory('');
-      });
+    saveExpenses({ description, amount, ts: Date.now(), cat: category }, () => {
+      setSaving(false);
+      setDescription('');
+      setAmount('');
+      setCategory('');
+    });
   }
 
   function renderCategoriesOptions() {
@@ -48,11 +45,11 @@ function ExpenseForm(props) {
 
     const keys = Object.keys(categories);
 
-    return keys.map((item, i) => {
+    return keys.map(item => {
       const cat = categories[item];
 
       return (
-        <IonSelectOption key={i} value={item}>
+        <IonSelectOption key={item} value={item}>
           {cat.name}
         </IonSelectOption>
       );

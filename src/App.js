@@ -10,13 +10,11 @@ import {
 } from '@ionic/react';
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 
-import firebase from 'firebase/app';
-import 'firebase/database';
-import { startOfMonth, endOfMonth } from 'date-fns';
-
 import Home from './pages/Home';
 import Categories from './pages/Categories';
 import List from './pages/List';
+import { getMonthlyExpenses } from './data/expenses';
+import { getCategories } from './data/categories';
 
 export const Context = createContext();
 
@@ -25,25 +23,8 @@ function App(props) {
   const [gastos, setGastos] = useState(null);
 
   useEffect(() => {
-    const now = new Date();
-
-    firebase
-      .database()
-      .ref('gastos')
-      .orderByChild('ts')
-      .startAt(startOfMonth(now).getTime())
-      .endAt(endOfMonth(now).getTime())
-      .on('value', snap => setGastos(snap.val()));
-      
-    firebase
-      .database()
-      .ref('categories')
-      .on('value', snap => setCategories(snap.val()));
-
-    firebase
-      .database()
-      .ref('categories')
-      .on('child_changed', snap => setCategories(snap.val()));
+    getMonthlyExpenses(setGastos);
+    getCategories(setCategories);
   }, []);
 
   return (

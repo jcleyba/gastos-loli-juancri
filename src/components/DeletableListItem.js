@@ -1,6 +1,6 @@
 import React from 'react';
 import { IonItemSliding, IonItemOptions, IonItemOption } from '@ionic/react';
-import { deleteEntity } from '../utils';
+import { deleteEntity } from '../data/remove';
 
 export default function DeletableListItem(props) {
   const { children, entityName, customRef } = props;

@@ -7,8 +7,7 @@ import {
   IonItem,
   IonButton
 } from '@ionic/react';
-import firebase from 'firebase/app';
-import 'firebase/database';
+import { saveCategory } from '../data/categories';
 
 function CategoriesForm(props) {
   const [cat, setCat] = useState('');
@@ -18,17 +17,14 @@ function CategoriesForm(props) {
     const val = e.target.value;
     setCat(val);
   }
-  
+
   function saveCat() {
     setSaving(true);
 
-    firebase
-      .database()
-      .ref('categories')
-      .push({ name: cat }, () => {
-        setSaving(false);
-        setCat('');
-      });
+    saveCategory({ name: cat }, () => {
+      setSaving(false);
+      setCat('');
+    });
   }
 
   return (

@@ -1,23 +1,17 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { IonItem, IonList, IonLabel, IonText } from '@ionic/react';
 import { format } from 'date-fns';
-import firebase from 'firebase/app';
-import 'firebase/database';
 
 import Page from '../components/Page';
 import DeletableListItem from '../components/DeletableListItem';
+import { getLastExpenses } from '../data/expenses';
 
 function List(props) {
   const [gastos, setGastos] = useState(null);
   const sliding = useRef(null);
 
   useEffect(() => {
-    firebase
-      .database()
-      .ref('gastos')
-      .limitToLast(40)
-      .orderByChild('ts')
-      .on('value', snap => setGastos(snap.val()));
+    getLastExpenses(40, setGastos);
   }, []);
 
   return (
