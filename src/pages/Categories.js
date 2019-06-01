@@ -7,18 +7,20 @@ import Page from '../components/Page';
 import DeletableListItem from '../components/DeletableListItem';
 
 function Categories(props) {
-  const { categories } = useContext(Context);
+  const { categories, id } = useContext(Context);
   const sliding = useRef(null);
 
   return (
     <Page title="Categorías">
       <CategoriesForm />
-      <IonList ref={sliding}>{renderObjectAsList(categories, sliding)}</IonList>
+      <IonList ref={sliding}>
+        {renderObjectAsList(categories, sliding, id)}
+      </IonList>
     </Page>
   );
 }
 
-function renderObjectAsList(object, ref) {
+function renderObjectAsList(object, ref, id) {
   if (!object) return 'Cargando datos...';
 
   const keys = Object.keys(object);
@@ -29,7 +31,7 @@ function renderObjectAsList(object, ref) {
     return (
       <DeletableListItem
         key={i}
-        entityName={`categories/${item}`}
+        entityName={`${id}/categories/${item}`}
         customRef={ref}
       >
         <IonItem>

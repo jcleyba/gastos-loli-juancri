@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   IonCard,
   IonCardContent,
@@ -8,10 +8,12 @@ import {
   IonButton
 } from '@ionic/react';
 import { saveCategory } from '../data/categories';
+import { Context } from '../App';
 
 function CategoriesForm(props) {
   const [cat, setCat] = useState('');
   const [saving, setSaving] = useState(false);
+  const { id } = useContext(Context);
 
   function setInput(e) {
     const val = e.target.value;
@@ -21,14 +23,14 @@ function CategoriesForm(props) {
   function saveCat() {
     setSaving(true);
 
-    saveCategory({ name: cat }, () => {
+    saveCategory(id, { name: cat }, () => {
       setSaving(false);
       setCat('');
     });
   }
 
   return (
-    <IonCard>
+    <IonCard color="default">
       <IonCardContent>
         <IonItem>
           <IonLabel position="floating">Nombre</IonLabel>

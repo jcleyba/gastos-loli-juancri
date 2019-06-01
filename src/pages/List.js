@@ -1,27 +1,29 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useContext } from 'react';
 import { IonItem, IonList, IonLabel, IonText } from '@ionic/react';
 import { format } from 'date-fns';
 
 import Page from '../components/Page';
 import DeletableListItem from '../components/DeletableListItem';
 import { getLastExpenses } from '../data/expenses';
+import { Context } from '../App';
 
 function List(props) {
   const [gastos, setGastos] = useState(null);
   const sliding = useRef(null);
+  const { id } = useContext(Context);
 
   useEffect(() => {
-    getLastExpenses(40, setGastos);
+    getLastExpenses(id, 40, setGastos);
   }, []);
 
   return (
     <Page title="Inicio">
-      <IonList ref={sliding}>{renderObjectAsList(gastos, sliding)}</IonList>
+      <IonList ref={sliding}>{renderObjectAsList(id, gastos, sliding)}</IonList>
     </Page>
   );
 }
 
-function renderObjectAsList(object, ref) {
+function renderObjectAsList(id, object, ref) {
   if (!object) return 'Cargando datos...';
 
   const keys = Object.keys(object);
@@ -30,7 +32,11 @@ function renderObjectAsList(object, ref) {
     const gasto = object[item];
 
     return (
-      <DeletableListItem key={i} entityName={`gastos/${item}`} customRef={ref}>
+      <DeletableListItem
+        key={i}
+        entityName={`${id}/gastos/${item}`}
+        customRef={ref}
+      >
         <IonItem>
           <IonLabel>
             {gasto.description} <br />

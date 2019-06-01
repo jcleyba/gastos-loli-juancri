@@ -4,18 +4,33 @@ import {
   IonHeader,
   IonToolbar,
   IonTitle,
-  IonContent
+  IonContent,
+  IonButtons,
+  IonButton
 } from '@ionic/react';
 
 function Page(props) {
+  const { setId } = props;
+
+  const clearSession = () => {
+    setId(null);
+    localStorage.clear();
+  };
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color="default">
+        <IonToolbar color="primary">
           <IonTitle>{props.title}</IonTitle>
+          {setId && (
+            <IonButtons slot="end">
+              <IonButton onClick={clearSession}>Cerrar sesión</IonButton>
+            </IonButtons>
+          )}
         </IonToolbar>
       </IonHeader>
-      <IonContent>{props.children}</IonContent>
+      <IonContent color="light">
+        {props.children}
+      </IonContent>
     </IonPage>
   );
 }

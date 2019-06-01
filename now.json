@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "name": "gastos-lolita-juancri",
+  "name": "gastos-manager",
   "builds": [
     {
       "src": "package.json",
@@ -14,7 +14,7 @@
       "headers": { "cache-control": "s-maxage=31536000,immutable" },
       "dest": "/static/$1"
     },
-    { "src": "/favicon.ico", "dest": "/favicon.ico" },
+    { "src": "/favicon.png", "dest": "/favicon.png" },
     { "src": "/asset-manifest.json", "dest": "/asset-manifest.json" },
     { "src": "/manifest.json", "dest": "/manifest.json" },
     { "src": "/precache-manifest.(.*)", "dest": "/precache-manifest.$1" },
@@ -29,5 +29,5 @@
       "dest": "/index.html"
     }
   ],
-  "alias": "gastos-lolita-juancri.now.sh"
+  "alias": "gastos-manager.now.sh"
 }

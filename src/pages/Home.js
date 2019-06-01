@@ -6,7 +6,7 @@ import Page from '../components/Page';
 
 function Home(props) {
   return (
-    <Page title="Inicio">
+    <Page {...props} title="Inicio">
       <ExpenseForm />
       <Totals />
     </Page>

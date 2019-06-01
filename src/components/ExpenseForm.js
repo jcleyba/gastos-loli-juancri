@@ -14,7 +14,7 @@ import { Context } from '../App';
 import { saveExpenses } from '../data/expenses';
 
 function ExpenseForm(props) {
-  const { categories } = useContext(Context);
+  const { categories, id } = useContext(Context);
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState('');
@@ -32,12 +32,16 @@ function ExpenseForm(props) {
   function saveExp() {
     setSaving(true);
 
-    saveExpenses({ description, amount, ts: Date.now(), cat: category }, () => {
-      setSaving(false);
-      setDescription('');
-      setAmount('');
-      setCategory('');
-    });
+    saveExpenses(
+      id,
+      { description, amount, ts: Date.now(), cat: category },
+      () => {
+        setSaving(false);
+        setDescription('');
+        setAmount('');
+        setCategory('');
+      }
+    );
   }
 
   function renderCategoriesOptions() {
@@ -57,7 +61,7 @@ function ExpenseForm(props) {
   }
 
   return (
-    <IonCard>
+    <IonCard color="default">
       <IonCardContent>
         <IonItem>
           <IonLabel position="floating">Descripción</IonLabel>

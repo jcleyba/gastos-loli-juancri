@@ -10,9 +10,11 @@ import {
 } from '@ionic/react';
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 
+import './App.css';
 import Home from './pages/Home';
 import Categories from './pages/Categories';
 import List from './pages/List';
+import LoginForm from './components/LoginForm';
 import { getMonthlyExpenses } from './data/expenses';
 import { getCategories } from './data/categories';
 
@@ -21,14 +23,24 @@ export const Context = createContext();
 function App(props) {
   const [categories, setCategories] = useState(null);
   const [gastos, setGastos] = useState(null);
+  const [id, setId] = useState(null);
 
   useEffect(() => {
-    getMonthlyExpenses(setGastos);
-    getCategories(setCategories);
+    const uid = localStorage.getItem('id');
+    setId(uid);
   }, []);
 
+  useEffect(() => {
+    getMonthlyExpenses(id, setGastos);
+    getCategories(id, setCategories);
+  }, [id]);
+
+  if (!id) {
+    return <LoginForm setId={setId} />;
+  }
+
   return (
-    <Context.Provider value={{ gastos, categories }}>
+    <Context.Provider value={{ gastos, categories, id }}>
       <Router>
         <IonApp>
           <Route exact path="/" render={() => <Redirect to="/home" />} />
@@ -36,7 +48,7 @@ function App(props) {
             <IonRouterOutlet>
               <Route
                 path="/:tab(home)"
-                render={props => <Home {...props} />}
+                render={props => <Home {...props} setId={setId} />}
                 exact={true}
               />
               <Route
@@ -48,15 +60,15 @@ function App(props) {
             </IonRouterOutlet>
             <IonTabBar slot="bottom">
               <IonTabButton tab="schedule" href="/home">
-                <IonIcon name="calendar" />
+                <IonIcon name="home" />
                 <IonLabel>Inicio</IonLabel>
               </IonTabButton>
               <IonTabButton tab="speakers" href="/categories">
-                <IonIcon name="contacts" />
+                <IonIcon name="pricetag" />
                 <IonLabel>Categories</IonLabel>
               </IonTabButton>
               <IonTabButton tab="map" href="/list">
-                <IonIcon name="map" />
+                <IonIcon name="list" />
                 <IonLabel>Lista</IonLabel>
               </IonTabButton>
             </IonTabBar>

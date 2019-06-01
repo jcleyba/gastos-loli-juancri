@@ -10,13 +10,13 @@ import * as serviceWorker from './serviceWorker';
 import firebase from 'firebase/app';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyAu8p1mKl7gQYrG7cL-E7zB6dXNBIZ-Cbo',
-  authDomain: 'gastos-comunes-d9d31.firebaseapp.com',
-  databaseURL: 'https://gastos-comunes-d9d31.firebaseio.com',
-  projectId: 'gastos-comunes-d9d31',
-  storageBucket: 'gastos-comunes-d9d31.appspot.com',
-  messagingSenderId: '840895294670',
-  appId: '1:840895294670:web:b75b298056bffed4'
+  apiKey: "AIzaSyDXFZnzQ2zbxrtwzhC5RFX2Q9KsnJgZFVI",
+  authDomain: "misgastospormes.firebaseapp.com",
+  databaseURL: "https://misgastospormes.firebaseio.com",
+  projectId: "misgastospormes",
+  storageBucket: "misgastospormes.appspot.com",
+  messagingSenderId: "67917001311",
+  appId: "1:67917001311:web:cc1ba7dd408f5624"
 };
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
