@@ -21,14 +21,17 @@ export const Context = createContext();
 function App(props) {
   const [categories, setCategories] = useState(null);
   const [gastos, setGastos] = useState(null);
+  const [lastMonth, setLastMonth] = useState(null);
 
   useEffect(() => {
-    getMonthlyExpenses(setGastos);
+    const month = new Date().getMonth();
+    getMonthlyExpenses(setGastos, month);
+    getMonthlyExpenses(setLastMonth, month - 1);
     getCategories(setCategories);
   }, []);
 
   return (
-    <Context.Provider value={{ gastos, categories }}>
+    <Context.Provider value={{ gastos, categories, lastMonth }}>
       <Router>
         <IonApp>
           <Route exact path="/" render={() => <Redirect to="/home" />} />

@@ -2,8 +2,8 @@ import firebase from 'firebase/app';
 import 'firebase/database';
 import { startOfMonth, endOfMonth } from 'date-fns';
 
-export function getMonthlyExpenses(handleData) {
-  const now = new Date();
+export function getMonthlyExpenses(handleData, month) {
+  const now = new Date().setMonth(month);
 
   firebase
     .database()
@@ -23,9 +23,9 @@ export function getLastExpenses(limit = 40, handleData) {
     .on('value', snap => handleData(snap.val()));
 }
 
-export function saveExpenses(data, handleResponse){
-    firebase
-      .database()
-      .ref('gastos')
-      .push(data, handleResponse);
+export function saveExpenses(data, handleResponse) {
+  firebase
+    .database()
+    .ref('gastos')
+    .push(data, handleResponse);
 }

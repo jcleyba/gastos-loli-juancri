@@ -3,7 +3,25 @@ import { IonList, IonItem, IonText } from '@ionic/react';
 import { Context } from '../App';
 
 function Totals(props) {
-  const { gastos, categories } = useContext(Context);
+  const { gastos, categories, lastMonth } = useContext(Context);
+
+  function calcLastMonth() {
+    if (!lastMonth) return null;
+
+    const keys = Object.keys(lastMonth);
+    let sum = 0;
+    keys.forEach(item => {
+      sum += Number(lastMonth[item].amount);
+    });
+
+    return (
+      <IonItem>
+        <IonText>
+          Mes pasado: <b>${sum}</b>
+        </IonText>
+      </IonItem>
+    );
+  }
 
   function mapGastos() {
     if (!categories || !gastos) return null;
@@ -38,7 +56,7 @@ function Totals(props) {
 
       return (
         <IonItem key={i}>
-          <IonText> {cat.name}</IonText>
+          <IonText>{cat.name}</IonText>
           <IonText slot="end">${sum}</IonText>
         </IonItem>
       );
@@ -46,7 +64,12 @@ function Totals(props) {
 
     return (
       <IonList>
-        <IonItem>Total Mensual: ${monthlySum}</IonItem>
+        <IonItem>
+          <IonText>
+            Total Mensual: <strong>${monthlySum}</strong>
+          </IonText>
+        </IonItem>
+        {calcLastMonth()}
         {list}
       </IonList>
     );
