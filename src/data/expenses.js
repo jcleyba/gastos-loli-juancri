@@ -2,8 +2,8 @@ import firebase from 'firebase/app';
 import 'firebase/database';
 import { startOfMonth, endOfMonth } from 'date-fns';
 
-export function getMonthlyExpenses(id, handleData) {
-  const now = new Date();
+export function getMonthlyExpenses(id, handleData, month) {
+  const now = new Date().setMonth(month);
 
   firebase
     .database()

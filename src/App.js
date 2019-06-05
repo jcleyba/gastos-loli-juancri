@@ -24,6 +24,7 @@ function App(props) {
   const [categories, setCategories] = useState(null);
   const [gastos, setGastos] = useState(null);
   const [id, setId] = useState(null);
+  const [lastMonth, setLastMonth] = useState(null);
 
   useEffect(() => {
     const uid = localStorage.getItem('id');
@@ -31,7 +32,9 @@ function App(props) {
   }, []);
 
   useEffect(() => {
-    getMonthlyExpenses(id, setGastos);
+    const month = new Date().getMonth();
+    getMonthlyExpenses(id, setGastos, month);
+    getMonthlyExpenses(id, setLastMonth, month - 1);
     getCategories(id, setCategories);
   }, [id]);
 
@@ -40,7 +43,7 @@ function App(props) {
   }
 
   return (
-    <Context.Provider value={{ gastos, categories, id }}>
+    <Context.Provider value={{ gastos, categories, id, lastMonth }}>
       <Router>
         <IonApp>
           <Route exact path="/" render={() => <Redirect to="/home" />} />
