@@ -17,7 +17,7 @@ function Totals(props) {
     return (
       <IonItem>
         <IonText>
-          Mes pasado: <b>${sum}</b>
+          Mes pasado: <b>${sum.toFixed(2)}</b>
         </IonText>
       </IonItem>
     );
@@ -66,7 +66,7 @@ function Totals(props) {
       <IonList>
         <IonItem>
           <IonText>
-            Total Mensual: <strong>${monthlySum}</strong>
+            Total Mensual: <strong>${monthlySum.toFixed(2)}</strong>
           </IonText>
         </IonItem>
         {calcLastMonth()}
