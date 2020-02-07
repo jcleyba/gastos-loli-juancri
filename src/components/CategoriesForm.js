@@ -13,7 +13,7 @@ import { Context } from '../App';
 function CategoriesForm(props) {
   const [cat, setCat] = useState('');
   const [saving, setSaving] = useState(false);
-  const { id } = useContext(Context);
+  const { id, selectedEv } = useContext(Context);
 
   function setInput(e) {
     const val = e.target.value;
@@ -22,8 +22,9 @@ function CategoriesForm(props) {
 
   function saveCat() {
     setSaving(true);
+    const url = `${id}/events/${selectedEv.id}`;
 
-    saveCategory(id, { name: cat }, () => {
+    saveCategory(url, { name: cat }, () => {
       setSaving(false);
       setCat('');
     });
@@ -40,8 +41,7 @@ function CategoriesForm(props) {
           expand="block"
           color="primary"
           disabled={!cat || saving}
-          onClick={saveCat}
-        >
+          onClick={saveCat}>
           Guardar
         </IonButton>
       </IonCardContent>

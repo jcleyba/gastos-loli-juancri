@@ -14,17 +14,20 @@ import './App.css';
 import Home from './pages/Home';
 import Categories from './pages/Categories';
 import List from './pages/List';
+import Events from './pages/Events';
 import LoginForm from './components/LoginForm';
-import { getMonthlyExpenses } from './data/expenses';
+import { getEvents } from './data/events';
 import { getCategories } from './data/categories';
+import { getExpenses } from './data/expenses';
 
 export const Context = createContext();
 
 function App(props) {
-  const [categories, setCategories] = useState(null);
+  const [events, setEvents] = useState(null);
+  const [selectedEv, setSelectedEv] = useState(null);
   const [gastos, setGastos] = useState(null);
   const [id, setId] = useState(null);
-  const [lastMonth, setLastMonth] = useState(null);
+  const [categories, setCategories] = useState(null);
 
   useEffect(() => {
     const uid = localStorage.getItem('id');
@@ -32,26 +35,38 @@ function App(props) {
   }, []);
 
   useEffect(() => {
-    const month = new Date().getMonth();
-    getMonthlyExpenses(id, setGastos, month);
-    getMonthlyExpenses(id, setLastMonth, month - 1);
-    getCategories(id, setCategories);
+    getEvents(id, setEvents);
   }, [id]);
+
+  useEffect(() => {
+    if (selectedEv) {
+      const url = `${id}/events/${selectedEv.id}`;
+
+      getCategories(url, setCategories);
+      getExpenses(url, setGastos);
+    }
+  }, [selectedEv]);
 
   if (!id) {
     return <LoginForm setId={setId} />;
   }
 
   return (
-    <Context.Provider value={{ gastos, categories, id, lastMonth }}>
+    <Context.Provider
+      value={{ events, categories, selectedEv, setSelectedEv, id, gastos }}>
       <Router>
         <IonApp>
-          <Route exact path="/" render={() => <Redirect to="/home" />} />
+          <Route exact path="/" render={() => <Redirect to="/events" />} />
           <IonTabs>
             <IonRouterOutlet>
               <Route
+                path="/:tab(events)"
+                render={props => <Events {...props} setId={setId} />}
+                exact={true}
+              />
+              <Route
                 path="/:tab(home)"
-                render={props => <Home {...props} setId={setId} />}
+                render={(props) => <Home {...props} selectedEv={selectedEv} />}
                 exact={true}
               />
               <Route
@@ -62,15 +77,22 @@ function App(props) {
               <Route path="/:tab(list)" component={List} exact={true} />
             </IonRouterOutlet>
             <IonTabBar slot="bottom">
-              <IonTabButton tab="schedule" href="/home">
-                <IonIcon name="home" />
-                <IonLabel>Inicio</IonLabel>
+              <IonTabButton tab="events" href="/events">
+                <IonIcon name="calendar" />
+                <IonLabel>Eventos</IonLabel>
               </IonTabButton>
-              <IonTabButton tab="speakers" href="/categories">
+              <IonTabButton tab="home" href="/home" disabled={!selectedEv}>
+                <IonIcon name="card" />
+                <IonLabel>Gastos</IonLabel>
+              </IonTabButton>
+              <IonTabButton
+                tab="speakers"
+                href="/categories"
+                disabled={!selectedEv}>
                 <IonIcon name="pricetag" />
-                <IonLabel>Categories</IonLabel>
+                <IonLabel>Categorías</IonLabel>
               </IonTabButton>
-              <IonTabButton tab="map" href="/list">
+              <IonTabButton tab="map" href="/list" disabled={!selectedEv}>
                 <IonIcon name="list" />
                 <IonLabel>Lista</IonLabel>
               </IonTabButton>

@@ -10,21 +10,24 @@ import { Context } from '../App';
 function List(props) {
   const [gastos, setGastos] = useState(null);
   const sliding = useRef(null);
-  const { id } = useContext(Context);
+  const { id, selectedEv } = useContext(Context);
+  const url = `${id}/events/${selectedEv.id}`;
 
   useEffect(() => {
-    getLastExpenses(id, 40, setGastos);
+    getLastExpenses(url, 50, setGastos);
   }, []);
 
   return (
-    <Page title="Inicio">
-      <IonList ref={sliding}>{renderObjectAsList(id, gastos, sliding)}</IonList>
+    <Page title={`${selectedEv.name}: Movimientos`}>
+      <IonList ref={sliding}>
+        {renderObjectAsList(url, gastos, sliding)}
+      </IonList>
     </Page>
   );
 }
 
 function renderObjectAsList(id, object, ref) {
-  if (!object) return 'Cargando datos...';
+  if (!object) return 'Sin datos...';
 
   const keys = Object.keys(object);
 
@@ -35,8 +38,7 @@ function renderObjectAsList(id, object, ref) {
       <DeletableListItem
         key={i}
         entityName={`${id}/gastos/${item}`}
-        customRef={ref}
-      >
+        customRef={ref}>
         <IonItem>
           <IonLabel>
             {gasto.description} <br />

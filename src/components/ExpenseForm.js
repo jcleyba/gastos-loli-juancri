@@ -14,7 +14,7 @@ import { Context } from '../App';
 import { saveExpenses } from '../data/expenses';
 
 function ExpenseForm(props) {
-  const { categories, id } = useContext(Context);
+  const { categories, id, selectedEv } = useContext(Context);
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState('');
@@ -31,9 +31,10 @@ function ExpenseForm(props) {
 
   function saveExp() {
     setSaving(true);
+    const url = `${id}/events/${selectedEv.id}`;
 
     saveExpenses(
-      id,
+      url,
       { description, amount, ts: Date.now(), cat: category },
       () => {
         setSaving(false);
@@ -45,7 +46,7 @@ function ExpenseForm(props) {
   }
 
   function renderCategoriesOptions() {
-    if (!categories) return 'Cargando datos...';
+    if (!categories) return 'Sin datos...';
 
     const keys = Object.keys(categories);
 
@@ -84,8 +85,7 @@ function ExpenseForm(props) {
           <IonSelect
             value={category}
             interface="popover"
-            onIonChange={e => setInput(e, setCategory)}
-          >
+            onIonChange={e => setInput(e, setCategory)}>
             {renderCategoriesOptions()}
           </IonSelect>
         </IonItem>
@@ -93,8 +93,7 @@ function ExpenseForm(props) {
           expand="block"
           color="primary"
           disabled={!description || !amount || !category || saving}
-          onClick={saveExp}
-        >
+          onClick={saveExp}>
           Guardar
         </IonButton>
       </IonCardContent>

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "name": "gastos-manager",
+  "name": "jacuna-events-manager",
   "builds": [
     {
       "src": "package.json",
@@ -29,5 +29,5 @@
       "dest": "/index.html"
     }
   ],
-  "alias": "gastos-manager.now.sh"
+  "alias": "jacuna-events-manager.now.sh"
 }

@@ -1,16 +1,11 @@
 import firebase from 'firebase/app';
 import 'firebase/database';
-import { startOfMonth, endOfMonth } from 'date-fns';
 
-export function getMonthlyExpenses(id, handleData, month) {
-  const now = new Date().setMonth(month);
-
+export function getExpenses(id, handleData) {
   firebase
     .database()
     .ref(id + '/gastos')
     .orderByChild('ts')
-    .startAt(startOfMonth(now).getTime())
-    .endAt(endOfMonth(now).getTime())
     .on('value', snap => handleData(snap.val()));
 }
 

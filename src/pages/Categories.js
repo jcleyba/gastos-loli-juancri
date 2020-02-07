@@ -7,21 +7,22 @@ import Page from '../components/Page';
 import DeletableListItem from '../components/DeletableListItem';
 
 function Categories(props) {
-  const { categories, id } = useContext(Context);
+  const { categories, id, selectedEv } = useContext(Context);
   const sliding = useRef(null);
+  const url = `${id}/events/${selectedEv.id}`;
 
   return (
-    <Page title="Categorías">
+    <Page title={`${selectedEv.name}: Categorías`}>
       <CategoriesForm />
       <IonList ref={sliding}>
-        {renderObjectAsList(categories, sliding, id)}
+        {renderObjectAsList(categories, sliding, url)}
       </IonList>
     </Page>
   );
 }
 
 function renderObjectAsList(object, ref, id) {
-  if (!object) return 'Cargando datos...';
+  if (!object) return 'Sin datos...';
 
   const keys = Object.keys(object);
 
@@ -32,8 +33,7 @@ function renderObjectAsList(object, ref, id) {
       <DeletableListItem
         key={i}
         entityName={`${id}/categories/${item}`}
-        customRef={ref}
-      >
+        customRef={ref}>
         <IonItem>
           <IonLabel>{entity.name}</IonLabel>
         </IonItem>
