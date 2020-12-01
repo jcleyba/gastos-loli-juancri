@@ -1,20 +1,14 @@
-import React, { useEffect, useState, useRef, useContext } from 'react';
-import { IonItem, IonList, IonLabel, IonText } from '@ionic/react';
+import { IonItem, IonLabel, IonList, IonText } from '@ionic/react';
 import { format } from 'date-fns';
-
-import Page from '../components/Page';
+import React, { useRef, useContext } from 'react';
+import { AppContext } from '../App';
 import DeletableListItem from '../components/DeletableListItem';
-import { getLastExpenses } from '../data/expenses';
-import { Context } from '../App';
+import Page from '../components/Page';
 
-function List(props) {
-  const [gastos, setGastos] = useState(null);
+function List() {
   const sliding = useRef(null);
-  const { id } = useContext(Context);
-
-  useEffect(() => {
-    getLastExpenses(id, 40, setGastos);
-  }, []);
+  const [appState] = useContext(AppContext);
+  const { id, gastos } = appState.context;
 
   return (
     <Page title="Inicio">
@@ -49,4 +43,4 @@ function renderObjectAsList(id, object, ref) {
   });
 }
 
-export default List;
+export default React.memo(List);

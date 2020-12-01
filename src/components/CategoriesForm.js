@@ -1,19 +1,21 @@
-import React, { useState, useContext } from 'react';
 import {
+  IonButton,
   IonCard,
   IonCardContent,
   IonInput,
-  IonLabel,
   IonItem,
-  IonButton
+  IonLabel,
 } from '@ionic/react';
+import { useMachine } from '@xstate/react';
+import React, { useState } from 'react';
 import { saveCategory } from '../data/categories';
-import { Context } from '../App';
+import { AppStateMachine } from '../App';
 
-function CategoriesForm(props) {
+function CategoriesForm() {
   const [cat, setCat] = useState('');
   const [saving, setSaving] = useState(false);
-  const { id } = useContext(Context);
+  const [appState] = useMachine(AppStateMachine);
+  const { id } = appState.context;
 
   function setInput(e) {
     const val = e.target.value;

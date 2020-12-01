@@ -5,12 +5,14 @@ import {
   IonInput,
   IonLabel,
   IonItem,
-  IonButton
+  IonButton,
 } from '@ionic/react';
+import { AppContext } from '../App';
 
-function LoginForm(props) {
+function LoginForm() {
   const [id, setId] = useState('');
   const [saving, setSaving] = useState(false);
+  const [, send] = React.useContext(AppContext);
 
   function setInput(e) {
     const val = e.target.value;
@@ -20,10 +22,9 @@ function LoginForm(props) {
   function saveId() {
     setSaving(true);
     localStorage.setItem('id', id);
-    props.setId(id);
-    
     setSaving(false);
     setId('');
+    send('LOGIN');
   }
 
   return (

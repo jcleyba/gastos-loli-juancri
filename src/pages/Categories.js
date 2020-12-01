@@ -1,13 +1,14 @@
-import React, { useContext, useRef } from 'react';
+import React, { useRef } from 'react';
 import { IonList, IonItem, IonLabel } from '@ionic/react';
-
-import { Context } from '../App';
+import { useMachine } from '@xstate/react';
+import { AppStateMachine } from '../App';
 import CategoriesForm from '../components/CategoriesForm';
 import Page from '../components/Page';
 import DeletableListItem from '../components/DeletableListItem';
 
 function Categories(props) {
-  const { categories, id } = useContext(Context);
+  const [appState] = useMachine(AppStateMachine);
+  const { categories, id } = appState.context;
   const sliding = useRef(null);
 
   return (

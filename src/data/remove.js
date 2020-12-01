@@ -7,8 +7,5 @@ export function deleteEntity(uri, ref) {
       ref.current.closeSlidingItems();
     }
   }
-  firebase
-    .database()
-    .ref(uri)
-    .remove(close);
+  return firebase.database().ref(uri).remove(close);
 }

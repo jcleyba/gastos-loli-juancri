@@ -1,47 +1,84 @@
-import React, { useState, useEffect, useContext } from 'react';
 import {
+  IonButton,
   IonCard,
   IonCardContent,
   IonInput,
-  IonLabel,
   IonItem,
-  IonButton,
+  IonLabel,
   IonSelect,
   IonSelectOption
 } from '@ionic/react';
-
-import { Context } from '../App';
+import { useMachine } from '@xstate/react';
+import React, { useContext } from 'react';
+import { assign, createMachine } from 'xstate';
+import { AppContext } from '../App';
 import { saveExpenses } from '../data/expenses';
 
-function ExpenseForm(props) {
-  const { categories, id } = useContext(Context);
-  const [description, setDescription] = useState('');
-  const [amount, setAmount] = useState('');
-  const [category, setCategory] = useState('');
-  const [saving, setSaving] = useState(false);
+const expensesMachine = createMachine(
+  {
+    id: 'expense',
+    initial: 'editing',
+    context: {
+      description: '',
+      amount: '',
+      category: '',
+    },
+    states: {
+      editing: {
+        on: {
+          CHANGE: {
+            actions: ['onChange'],
+          },
+          SUBMIT: 'saving',
+        },
+      },
+      saving: {
+        on: {
+          SUCCESS: {
+            actions: ['clearForm'],
+            target: 'editing',
+          },
+        },
+      },
+    },
+  },
+  {
+    actions: {
+      // Assign
+      onChange: assign((ctx, e) => ({
+        ...ctx,
+        [e.key]: e.value,
+      })),
+      clearForm: assign({
+        description: '',
+        amount: '',
+        category: '',
+      }),
+    },
+  }
+);
 
-  function setInput(e, callback) {
-    const val = e.target.value;
-    callback(val);
+function ExpenseForm() {
+  const [appState, globalSend] = useContext(AppContext);
+  const [state, send] = useMachine(expensesMachine);
+  const { categories, id } = appState.context;
+  const { description, amount, category } = state.context;
+
+  function setInput(e) {
+    e.preventDefault();
+    send('CHANGE', { key: e.target.name, value: e.target.value });
   }
 
-  useEffect(() => {
-    setCategory('');
-  }, [categories]);
-
-  function saveExp() {
-    setSaving(true);
-
-    saveExpenses(
-      id,
-      { description, amount, ts: Date.now(), cat: category },
-      () => {
-        setSaving(false);
-        setDescription('');
-        setAmount('');
-        setCategory('');
-      }
-    );
+  async function saveExp() {
+    send('SUBMIT');
+    await saveExpenses(id, {
+      description,
+      amount,
+      ts: Date.now(),
+      cat: category,
+    });
+    send('SUCCESS');
+    globalSend('ADDED');
   }
 
   function renderCategoriesOptions() {
@@ -49,7 +86,7 @@ function ExpenseForm(props) {
 
     const keys = Object.keys(categories);
 
-    return keys.map(item => {
+    return keys.map((item) => {
       const cat = categories[item];
 
       return (
@@ -66,25 +103,28 @@ function ExpenseForm(props) {
         <IonItem>
           <IonLabel position="floating">Descripción</IonLabel>
           <IonInput
+            name="description"
             value={description}
-            onIonInput={e => setInput(e, setDescription)}
+            onIonInput={setInput}
           />
         </IonItem>
         <IonItem>
           <IonLabel position="floating">Monto</IonLabel>
           <IonInput
+            name="amount"
             type="number"
             min="0"
             value={amount}
-            onIonInput={e => setInput(e, setAmount)}
+            onIonInput={setInput}
           />
         </IonItem>
         <IonItem>
           <IonLabel position="floating">Tipo de Gasto</IonLabel>
           <IonSelect
+            name="category"
             value={category}
             interface="popover"
-            onIonChange={e => setInput(e, setCategory)}
+            onIonChange={setInput}
           >
             {renderCategoriesOptions()}
           </IonSelect>
@@ -92,7 +132,9 @@ function ExpenseForm(props) {
         <IonButton
           expand="block"
           color="primary"
-          disabled={!description || !amount || !category || saving}
+          disabled={
+            state.matches('saving') || !category || !amount || !description
+          }
           onClick={saveExp}
         >
           Guardar

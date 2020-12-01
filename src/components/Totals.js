@@ -1,16 +1,17 @@
-import React, { useContext } from 'react';
-import { IonList, IonItem, IonText } from '@ionic/react';
-import { Context } from '../App';
+import { IonItem, IonList, IonText } from '@ionic/react';
+import React from 'react';
+import { AppContext } from '../App';
 
 function Totals(props) {
-  const { gastos, categories, lastMonth } = useContext(Context);
+  const [appState] = React.useContext(AppContext);
+  const { categories, gastos, lastMonth } = appState.context;
 
   function calcLastMonth() {
     if (!lastMonth) return null;
 
     const keys = Object.keys(lastMonth);
     let sum = 0;
-    keys.forEach(item => {
+    keys.forEach((item) => {
       sum += Number(lastMonth[item].amount);
     });
 
@@ -29,7 +30,7 @@ function Totals(props) {
     let mapped = {};
     const keys = Object.keys(gastos);
 
-    keys.forEach(item => {
+    keys.forEach((item) => {
       const gasto = gastos[item];
 
       if (!mapped[gasto.cat]) {
